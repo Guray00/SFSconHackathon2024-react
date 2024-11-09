@@ -73,9 +73,6 @@ export default function IndexPage() {
               <div className="shrink-0 backdrop-blur-md bg-white/70 shadow-lg m-4 rounded-medium ">
                 <SideNav cities={markers} src={src} setSrc={setSrc} dst={dst} setDst={setDst} negotiations={negotiations} />
               </div>
-              <div className="shrink-0 mt-4 w-full h-full">
-                <NegotiationsPopup />
-              </div>
             </div>
           </div>
         </div>

@@ -15,7 +15,49 @@ import { useState } from "react";
 
 let src_city_name = "";
 let dst_city_name = "";
+let finalprice = 0;
+let supplier = "";
 
+import {ModalContent, ModalHeader, ModalBody, ModalFooter} from "@nextui-org/react";
+/* 
+function ModalFun() {
+
+    const {isOpen, onOpen, onOpenChange} = useDisclosure();
+
+    
+
+  return (
+    <>
+      <Modal isOpen={openmodal}>
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader className="flex flex-col gap-1">Finished negotiation</ModalHeader>
+              <ModalBody>
+                <p>
+                    Your negotiation has been completed successfully. The
+                    transport will be carried out by the selected carrier.
+
+                    price:{finalprice}
+                    supplier: {supplier}
+                </p>
+              </ModalBody>
+              <ModalFooter>
+                <Button color="danger" variant="light" onPress={onClose}>
+                 Refuse 
+                </Button>
+                <Button color="primary" onPress={onClose}>
+                  Accept
+                </Button>
+              </ModalFooter>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
+    </>
+  );
+}
+ */
 
 async function postNegotiation(src, dst, min, max, timeout = 100000) { // default timeout of 100 seconds
     const url = new URL("http://localhost:9000/negotiations");
@@ -52,6 +94,11 @@ async function postNegotiation(src, dst, min, max, timeout = 100000) { // defaul
   
       const data = await response.json();
       console.log("Received data:", data);
+      supplier = data.supplier_name;
+      finalprice = data.final_price;
+      
+      confirm("Your negotiation has been completed successfully. The transport will be carried out by the selected carrier. price: " + finalprice + " supplier: " + supplier);
+
       return data;
       
       
@@ -87,6 +134,7 @@ export default function SideNav({
 
   return (
     <div className="p-4 max-w-xs h-fit space-y-4 z-0">
+    {/* <ModalFun/> */}
       <h2 className="text-xl font-bold mb-4">New negotiation</h2>
 
       <Autocomplete

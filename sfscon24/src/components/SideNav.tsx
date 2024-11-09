@@ -5,31 +5,61 @@ import {
   DatePicker,
   Slider,
 } from "@nextui-org/react";
-import { Spacer } from "@nextui-org/spacer";
 import { Divider } from "@nextui-org/react";
+import type { LatLngTuple } from "leaflet";
+import Negotiation from "./Negotiation";
+import { Accordion, AccordionItem } from "@nextui-org/react";
 
-export const cities = [
-  { label: "Milan", value: "milan" },
-  { label: "Paris", value: "paris" },
-];
-
-export default function SideNav() {
+export default function SideNav({
+  negotiations,
+  cities,
+  src,
+  setSrc,
+  dst,
+  setDst,
+}: {
+  negotiations: any[];
+  cities: { value: LatLngTuple; label: string }[];
+  src: LatLngTuple;
+  setSrc: (src: LatLngTuple) => void;
+  dst: LatLngTuple;
+  setDst: (dst: LatLngTuple) => void;
+}) {
   return (
-    <div className="flex flex-col space-y-4 p-4 z-0 bg-opacity-0">
-      <h1>
-        <span className="text-xl justify-center">New negotiation</span>
-      </h1>
-      <Autocomplete label="Select load city" className="max-w-xs">
+    <div className="p-4 max-w-xs h-fit space-y-4 z-0">
+      <h2 className="text-xl font-bold mb-4">New negotiation</h2>
+
+      <Autocomplete
+        label="Source"
+        className="mb-4"
+        selectedKey={cities.find((city) => city.value === src)?.label}
+        onSelectionChange={(key) => {
+          const selected = cities.find((city) => city.label === key);
+          if (selected) {
+            setSrc(selected.value);
+          }
+        }}
+      >
         {cities.map((city) => (
-          <AutocompleteItem key={city.value} value={city.value}>
+          <AutocompleteItem key={city.label} value={city.label}>
             {city.label}
           </AutocompleteItem>
         ))}
       </Autocomplete>
 
-      <Autocomplete label="Select unload city" className="max-w-xs">
+      <Autocomplete
+        label="Destination"
+        className="mb-4"
+        selectedKey={cities.find((city) => city.value === dst)?.label}
+        onSelectionChange={(key) => {
+          const selected = cities.find((city) => city.label === key);
+          if (selected) {
+            setDst(selected.value);
+          }
+        }}
+      >
         {cities.map((city) => (
-          <AutocompleteItem key={city.value} value={city.value}>
+          <AutocompleteItem key={city.label} value={city.label}>
             {city.label}
           </AutocompleteItem>
         ))}
@@ -51,8 +81,22 @@ export default function SideNav() {
       </Button>
       <Divider />
       <h1>
-        <span className="text-xl justify-center">Negotiations (#5)</span>
+        <span className="text-xl justify-center">
+          Negotiations (#{negotiations.length})
+        </span>
       </h1>
+      {negotiations.length == 0 && (
+        <span className="text-sm">No negotiations found</span>
+      )}
+      
+      <Accordion variant="splitted" className="space-y-2">
+        {negotiations.map((negotiation, index) => (
+          <AccordionItem className="mt-2" title={`${negotiation.src} - ${negotiation.dst}`}>
+            {`Price range: ${negotiation.min} - ${negotiation.max}`}
+            {`Status: ${negotiation.status}`}
+          </AccordionItem>
+        ))}
+      </Accordion>
     </div>
   );
 }
